@@ -3,10 +3,10 @@ package machineLearning;
 public class Perceptron {
 	//CONSTANTS
 	public static final int SIDE = ImageChar.SIDE;
-	public static final int ITERATIONS = 100;
+	public static final long ITERATIONS = 10000;
     public static final int OUTPUT  = 26;
-    public static final float POSITIVE_DELTA = 0.001f;
-    public static final float NEGATIVE_DELTA = 0.001f;
+    public static final float POSITIVE_DELTA = 0.01f;
+    public static final float NEGATIVE_DELTA = 0.01f;
 
     //MEMBER VARIABLES
     ImageChar img;
@@ -28,7 +28,7 @@ public class Perceptron {
 	
 	//MEMBER METHODS
     public void solve() {
-    	//for(int i = 0; i<ITERATIONS; i++) {
+    	for(int i = 0; i<ITERATIONS; i++) {
     		
     		char real = img.drawRandomChar(0,0);
     		char guess = 0;
@@ -41,28 +41,29 @@ public class Perceptron {
     	    				
     	    			}
     	    		}
-    	    		guess = (char)(getGreatestIndex(tempOutput)+97);
+    	    		guess = (char)(getGreatestIndex(tempOutput)+'A');
     	    	}//x
     	    }//y
     	    System.out.println(guess + " " + real);
-    	    adjust(real,guess);
-    	//}//iterations
+    	    adjust(real,guess, tempOutput);
+    	    img.clear();
+    	}//iterations
     }
     
-    private void adjust(char real, char guess) {
-		
+    private void adjust(char real, char guess, float[] tempWeights) {
+    	if(real == guess)return;
+    	for(int x = 0; x< SIDE; x++) {
+	    	for(int y =0; y<SIDE; y++) {
+	    		if(img.getPixel(x,y)==1) {
+	    		
+	    			weights[x][y][real-'A'] += POSITIVE_DELTA;
+	    			weights[x][y][guess-'A'] -= NEGATIVE_DELTA;
+	    		}
+	    	}
+    	}
 		
 	}
 
-	private float add(float[] ayTony) {
-    	float outsideTheForLoop = 0.0f;
-    	for(int i = 0; i<ayTony.length;i++) 
-    	{
-    		outsideTheForLoop += ayTony[i];
-    	}
-    	return outsideTheForLoop;
-    }
-    
     
     private int getGreatestIndex(float[] letters) {
     	int greatest = 0;
